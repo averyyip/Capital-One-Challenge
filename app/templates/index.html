@@ -6,9 +6,7 @@
 
  		<!-- Leaflet.js - used for loading geojson file -->
  		<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
- 		<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css"/>
-		<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
-		<script src="{{ url_for('static',filename='js/leaflet.ajax.min.js')}}"></script>
+
 
 		<!-- Fullpage.js - Smooth scrolling-->
 		<script src="{{ url_for('static',filename='js/jquery.fullPage.js')}}"></script>
@@ -32,28 +30,13 @@
 			<section>
 				<div id="content">
 					<h2>Median Price of Neighbourhoods</h2>
-					<p>Grouping Neighbourhoods together, I was able to generate the visual available <a href="https://gist.github.com/anonymous/0d8b43bf0721422032332a79991eae19" target="_blank">here</a> containing median prices and counts for each neighborhood. Smaller neighborhoods were replaced with neighbourhoods in the given dataset (neighbourhoods.csv).</p>
+					<p>Grouping Neighbourhoods together, I was able to generate the visual available above containing median prices and counts for each neighborhood. Smaller neighborhoods were replaced with neighbourhoods in the given dataset (neighbourhoods.csv).</p>
 				</div>
 				
 				<div id="map_container">
-					<div id="map"></div>
+					<script src="https://gist.github.com/anonymous/0d8b43bf0721422032332a79991eae19.js"></script>
 				</div>
 				
-				<script type="text/javascript">
-					var map = L.map('map').setView([37.7749, -122.4194], 11);
-					map.attributionControl.setPrefix('');
-					L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
-					    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
-					    maxZoom: 15,
-					    id: 'mapbox.light',
-					    accessToken: 'pk.eyJ1IjoiYXZlcnl5aXAiLCJhIjoiY2o5eHFhdno1MHdsczMycXJldDhuYXo0ZSJ9.RMpvtQZa0CU9WYU3BS0FaA'
-					}).addTo(map);
-					function addDataToMap(data, map) {
-					    var dataLayer = L.geoJson(data);
-					    dataLayer.addTo(map);
-					}
-					$.getJSON("{{ url_for('static',filename='geojson/airbnb_median_price.geojson')}}", function(data) { addDataToMap(data, map); });
-				</script>
 
 			</section>
 			<!-- Second Visual: Histograms of Availability across all listings -->

@@ -10,20 +10,18 @@ h3 {
 	color: white;
 }
 
-
 div #map_container {
 	padding-top: 4em;
+	height: 30%
+	width: 30%;
+	overflow: hidden
+	position: absolute;
+
 }
 
 #content p {
 	color: white;
 	text-align: right;
-}
-
-#map {
-  height: 40em;
-  width: 65%;
-  margin: 0 auto;
 }
 
 #center {
