@@ -36,7 +36,7 @@ def clean_neighbourhood(text):
 def get_neighborhood(lat, lon):
 	lat = float(lat)
 	lon = float(lon)
-	listings = pd.read_csv("airbnb-sep-2017/listings.csv") 
+	listings = pd.read_csv("listings.csv") 
 	lat_lon = listings[["latitude", "longitude", "neighbourhood"]].dropna()
 	print(lat_lon[:1])
 	distances = np.sqrt((lat_lon["latitude"] - lat) ** 2 + (lat_lon["longitude"] - lon) ** 2)
