@@ -20,3 +20,7 @@ def handle_price():
     lon = request.form['lon']
     price = "$" + str(round(estimate_ideal_price(lat,lon), 2))
     return render_template("index.html", estimate_price=price, estimate_weekly_revenue="", scroll="price")
+
+@app.route("/favicon.ico")
+def favicon():
+    return(url_for('static',filename='favicon.ico')
