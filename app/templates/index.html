@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Airbnb Analysis</title>
+
+ 		<!-- Leaflet.js - used for loading geojson file -->
+ 		<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+ 		<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css"/>
+		<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+		<script src="{{ url_for('static',filename='js/leaflet.ajax.min.js')}}"></script>
+
+		<!-- Fullpage.js - Smooth scrolling-->
+		<script src="{{ url_for('static',filename='js/jquery.fullPage.js')}}"></script>
+
+		<!-- Styling -->
+		<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/index.css')}}">
+
+
+	</head>
+	<body>
+		<div id="fullpage">
+			<!-- Landing Page -->
+			<section>
+				<img id="logo" src="{{ url_for('static',filename='imgs/airbnb-logo.png')}}">
+				<img id="logo" src="{{ url_for('static',filename='imgs/cap1-logo.png')}}">
+				<div id="content">
+					<h1>Analyze. Optimize. Airbnb.</h1>
+				</div>
+			</section>
+			<!-- First Visual: Geojson Map of Median Prices-->
+			<section>
+				<div id="content">
+					<h2>Median Price of Neighbourhoods</h2>
+					<p>Grouping Neighbourhoods together, I was able to generate the visual available <a href="https://gist.github.com/anonymous/0d8b43bf0721422032332a79991eae19" target="_blank">here</a> containing median prices and counts for each neighborhood. Smaller neighborhoods were replaced with neighbourhoods in the given dataset (neighbourhoods.csv).</p>
+				</div>
+				
+				<div id="map_container">
+					<div id="map"></div>
+				</div>
+				
+				<script type="text/javascript">
+					var map = L.map('map').setView([37.7749, -122.4194], 11);
+					map.attributionControl.setPrefix('');
+					L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+					    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+					    maxZoom: 15,
+					    id: 'mapbox.light',
+					    accessToken: 'pk.eyJ1IjoiYXZlcnl5aXAiLCJhIjoiY2o5eHFhdno1MHdsczMycXJldDhuYXo0ZSJ9.RMpvtQZa0CU9WYU3BS0FaA'
+					}).addTo(map);
+					function addDataToMap(data, map) {
+					    var dataLayer = L.geoJson(data);
+					    dataLayer.addTo(map);
+					}
+					$.getJSON("{{ url_for('static',filename='geojson/airbnb_median_price.geojson')}}", function(data) { addDataToMap(data, map); });
+				</script>
+
+			</section>
+			<!-- Second Visual: Histograms of Availability across all listings -->
+			<section>
+				<div id="content">
+					<h2>Availability across all Listings</h2>
+					<p>By looking at the histograms on the number of available days for all listings during each time period (30 days, 60 days, 360 days), we discovered a bimodal distributions of availability. We can extrapolate from the right tail of the histograms that many listings are not being booked despite being available. From the left tail, we can say that there are either properties that are booked entirely or listings that have not been updated and are not being booked. In order to solve these bottlenecks, we need to help our customers price their properties and increase retention rates on listings </p>
+				</div>
+				
+				<div id="img_row">
+					<img src="{{ url_for('static',filename='imgs/avail_30.png')}}">
+					<img src="{{ url_for('static',filename='imgs/avail_60.png')}}">
+					<img src="{{ url_for('static',filename='imgs/avail_365.png')}}">
+				</div>
+			</section>
+			<!-- Third Visual:  -->
+			<section>
+				<div id="content">
+					<h2>Experienced hosts have greater number of bookings</h2>
+					<p>We discovered a moderate negative correlation between Host's experience (in terms of the number of listings on Airbnb) and the median number of availability for hosts with the same level of experience. Through the graph above and the assumption that unavailable listings equates to a booking, we discovered that grouping hosts with more listings on Airbnb tend to have a lower median number of available days which would translate to more bookings for each of their properties. It is possible that hosts with more listings tend to have a better understanding of Airbnb to the point where they are able to attain more booking relative to other users.</p>
+				</div>
+				<div id="img_row">
+					<img src="{{ url_for('static',filename='imgs/host_exp_availability.png')}}">
+				</div>
+			</section>
+			<!-- Estimate weekly revenue -->
+			<section id="rev">
+				<div id="content">
+					<h2>Estimate Weekly Revenue</h2>
+				</div>
+				<div id="center">
+					<h3>{{estimate_weekly_revenue}}</h3>
+					<p>Please Enter latitude and longitude</p>
+					<form action="{{ url_for('handle_rev') }}" method="post">
+					    <input type="text" name="lat", placeholder="Latitude">
+					    <input type="text" name="lon", placeholder="Longitude">
+					    <input type="submit">
+					</form>
+				</div>
+			</section>
+			<section id="price">
+				<div id="content">
+					<h2>Estimate price for maximized bookings</h2>
+				</div>
+
+				<div id="center">
+					<h3>{{estimate_price}}</h3>
+					<p>Please Enter latitude and longitude</p>
+					<form action="{{ url_for('handle_price') }}" method="post">
+					    <input type="text" name="lat", placeholder="Latitude">
+					    <input type="text" name="lon", placeholder="Longitude">
+					    <input type="submit">
+					</form>
+				</div>
+			</section>
+		</div>
+		<!-- Credits - Jumping to div -->
+		<div id="something">
+			{% if scroll %}
+			<script>
+			    document.getElementById('{{ scroll }}').scrollIntoView();
+			    // or
+			    document.location.hash = '#' + '{{ scroll }}';
+			</script>
+		{% endif %}
+	</body>
+</html>
