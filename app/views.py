@@ -23,4 +23,4 @@ def handle_price():
 
 @app.route("/favicon.ico")
 def favicon():
-    return(url_for('static',filename='favicon.ico')
+	return(url_for('static',filename='favicon.ico')
